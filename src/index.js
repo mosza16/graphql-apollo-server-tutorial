@@ -16,7 +16,8 @@ const getMe = async req => {
     const token = req.headers['x-token'];
     if(token){
         try{
-            return await jwt.verify(token, process.env.JWT_SECRET);
+            const user = await jwt.verify(token, process.env.JWT_SECRET);
+            return user;
         }catch (e) {
             throw new AuthenticationError(
                 'Your session expired. Sign in again.',
@@ -53,7 +54,7 @@ const eraseDatabaseOnSync = true;
 
 sequelize.sync({ force: eraseDatabaseOnSync }).then(async () => {
     if (eraseDatabaseOnSync) {
-        createUsersWithMessages(new Date());
+        await createUsersWithMessages(new Date());
     }
 
     app.listen({port: 4040}, () => {
