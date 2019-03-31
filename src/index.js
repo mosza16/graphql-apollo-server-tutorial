@@ -34,6 +34,8 @@ const getMe = async req => {
 // const userLoader =  new DataLoader(keys => loaders.user.batchUsers(keys, models));
 
 const server = new ApolloServer({
+    introspection: true,
+    playground: true,
     typeDefs: schema,
     resolvers,
     formatError: error => {
