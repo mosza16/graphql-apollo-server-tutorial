@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node --exec babel-node src/index.js",
+    "start": "nodemon --exec babel-node src/index.js",
     "start-dev": "nodemon --exec babel-node src/index.js",
     "test-server": "set TEST_DATABASE=baienwmj&& npm start",
-    "test": "mocha --require @babel/register \"./src/**/*.spec.js\""
+    "test": "mocha --require @babel/register \"./src/**/*.spec.js\"",
+    "heroku-prebuild": "export NPM_CONFIG_PRODUCTION=false; export NODE_ENV=; NPM_CONFIG_PRODUCTION=false NODE_ENV=development npm install --only=dev --dev",
+    "heroku-postbuild": "export NPM_CONFIG_PRODUCTION=true; export NODE_ENV=production;"
   },
   "keywords": [],
   "author": "",
