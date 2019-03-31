@@ -4,10 +4,12 @@ import express from 'express';
 import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import jwt from 'jsonwebtoken';
 import http from 'http';
+import DataLoader from 'dataloader';
 
 import resolvers from './resolvers';
 import schema from './schema';
 import models, { sequelize } from './models';
+import loaders from './loaders';
 
 const app = express();
 
@@ -26,6 +28,10 @@ const getMe = async req => {
         }
     }
 }
+
+
+// // this will caching users data
+// const userLoader =  new DataLoader(keys => loaders.user.batchUsers(keys, models));
 
 const server = new ApolloServer({
     typeDefs: schema,
@@ -46,6 +52,11 @@ const server = new ApolloServer({
         if(connection){
             return {
                 models,
+                loaders: {
+                    user: new DataLoader(keys =>
+                        loaders.user.batchUsers(keys, models),
+                    ),
+                },
             };
         }
 
@@ -55,6 +66,11 @@ const server = new ApolloServer({
                 models,
                 me: await getMe(req),
                 secret: process.env.JWT_SECRET,
+                loaders: {
+                    user: new DataLoader( keys =>
+                        loaders.user.batchUsers(keys, models),
+                    ),
+                },
             };
         }
     },

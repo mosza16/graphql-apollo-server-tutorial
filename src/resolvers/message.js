@@ -68,7 +68,9 @@ export default {
     },
     
     Message: {
-        user: async (message, args, { models }) => await models.User.findByPk(message.userId),
+        user: async (message, args, { loaders }) => {
+            return await loaders.user.load(message.userId);
+        },
     },
 
     Subscription: {
