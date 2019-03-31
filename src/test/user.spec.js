@@ -51,7 +51,7 @@ describe('users', () => {
                data: { errors },
            } = await userApi.deleteUser({id: '1'}, token);
 
-           expect(errors[0].message).to.eql('Not authorized as admin');
+           expect(errors[0].message).to.eql('Not authorized as admin.');
        });
     });
 });
