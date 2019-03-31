@@ -82,14 +82,17 @@ const httpServer = http.createServer(app);
 server.installSubscriptionHandlers(httpServer);
 
 const isTest  = process.env.TEST_DATABASE ? true : false;
+const isProduction = !!process.env.DATABASE_URL;
 
-sequelize.sync({ force: isTest }).then(async () => {
-    if (isTest) {
+const port = process.env.PORT || 4040;
+
+sequelize.sync({ force: isTest || isProduction }).then(async () => {
+    if (isTest || isProduction) {
         await createUsersWithMessages(new Date());
     }
 
-    httpServer.listen({port: 4040}, () => {
-        console.log('Apollo Server running on http://localhost:4040/graphql')
+    httpServer.listen({ port }, () => {
+        console.log(`Apollo Server running on http://localhost:${port}/graphql`);
     });
 });
 
